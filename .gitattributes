@@ -1,0 +1,2 @@
+C:/Users/brand/Documents/GitHub/PrivateServer/PrivateExecutables/DeadByDaylight-Win64-Shipping.exe filter=lfs diff=lfs merge=lfs -text
+*.exe filter=lfs diff=lfs merge=lfs -text
