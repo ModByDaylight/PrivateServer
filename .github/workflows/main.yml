@@ -21,7 +21,7 @@ jobs:
       - name: ZIP File
         uses: vimtor/action-zip@v1
         with:
-          files: ./PrivateServer
+          files: PrivateExecutables/ PrivateSeverLauncher.bat pakchunk40-WindowsNoEditor.pak pakchunk40-WindowsNoEditor.sig
           dest: PrivateServer.zip # will end up in working directory not the Publish folder
 
       - name: GIT Release
