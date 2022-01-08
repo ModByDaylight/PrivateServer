@@ -27,7 +27,7 @@ jobs:
       - name: GIT Release
         uses: marvinpinto/action-automatic-releases@latest
         with:
-          title: "FModel v${{ github.event.inputs.appVersion }}"
+          title: "Private Server v${{ github.event.inputs.appVersion }}"
           automatic_release_tag: ${{ github.event.inputs.appVersion }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           prerelease: false
