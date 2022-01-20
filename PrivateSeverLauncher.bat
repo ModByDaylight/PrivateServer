@@ -1,5 +1,5 @@
 @echo off
-set version=1.1.10
+set version=1.1.10.1
 title DBD Private Server (%version%)
 echo  ___  ___ ___    ___     _          _         ___
 echo ^|   \^| _ )   \  ^| _ \_ _(_)_ ____ _^| ^|_ ___  / __^| ___ _ ___ _____ _ _
