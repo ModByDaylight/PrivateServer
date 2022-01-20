@@ -1,0 +1,24 @@
+{
+    "DefaultMods": {
+        "File": [
+            {
+                "Name": "Private Server Configs",
+                "Version": "1.0.0",
+                "Author": "Mod By Daylight",
+                "Path": "https://cdn.discordapp.com/attachments/917649484450775061/933865749250969640/PrivateServerConfigs.zip"
+            },
+            {
+                "Name": "Cosmetics Fix",
+                "Version": "1.0.0",
+                "Author": "BrandonItaly",
+                "Path": "https://cdn.discordapp.com/attachments/917649484450775061/933842566514872400/AllCosmeticsFix.zip"
+            },
+            {
+                "Name": "Hawkins National Laboratory",
+                "Version": "1.0.0",
+                "Author": "BrandonItaly",
+                "Path": "https://cdn.discordapp.com/attachments/917649484450775061/933531883747278848/HawkinsNationalLaboratory.zip"
+            }
+        ]
+    }
+}
