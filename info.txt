@@ -1,3 +1,3 @@
-latestVersion=1.1.10
+latestVersion=1.1.10.1
 executablesPrivate=https://cdn.discordapp.com/attachments/849458346552721450/932137597457797201/PrivateExecutables.zip
 executablesLive=https://cdn.discordapp.com/attachments/849458346552721450/932137616948731974/LiveExecutables.zip
