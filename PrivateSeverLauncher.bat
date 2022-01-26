@@ -85,9 +85,12 @@ if exist "%path%\DeadByDaylight\Content\Paks\pakchunk0-WindowsNoEditor.pak" (
 if exist "%path%\DeadByDaylight\Content\Paks\pakchunk0-EGS.pak" (
     set platform=EGS
     set executables=EGS
-    set launch=com.epicgames.launcher://apps/611482b8586142cda48a0786eb8a127c%3A467a7bed47ec44d9b1c9da0c2dae58f7%3ABrill?action=launch&silent=true
+    set launch=com.epicgames.launcher://apps/Brill?action=launch&silent=true
 )
 if exist "%path%\DeadByDaylight\Content\Paks\pakchunk0-WinGDK.pak" (
+    set platform=WinGDK
+    set executables=WinGDK
+    set launch=shell:appsFolder\BehaviourInteractive.DeadbyDaylightWindows_b1gz2xhdanwfm!AppDeadByDaylightShipping
     echo The Private Server is currently unsupported on the Microsoft Store version of Dead by Daylight.
     goto :end
 )
