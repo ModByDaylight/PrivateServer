@@ -32,10 +32,10 @@ goto :start
 set path=C:\Program Files (x86)\Steam\steamapps\common\Dead by Daylight
 echo Is this where DBD is installed? %path% [Y/N]
 set /p installPath=
-if /i '%installPath%'=='N' goto :dbdlocation
-if /i '%installPath%'=='NO' goto :dbdlocation
 if /i '%installPath%'=='Y' goto :setupPrivate
 if /i '%installPath%'=='YES' goto :setupPrivate
+if /i '%installPath%'=='N' goto :dbdlocation
+if /i '%installPath%'=='NO' goto :dbdlocation
 echo "%installPath%" is not valid, try again.
 goto :paths
 :dbdlocation
@@ -61,11 +61,15 @@ echo Launching Private Server
 start %launch%
 goto :end
 :setupPrivate
+if not exist "%path%\DeadByDaylight.exe" (
+    echo Invalid directory, try again.
+    goto :dbdlocation
+)
 echo %path%>gamepath.txt
 call :platformCheck
 echo Importing mods...
 if not exist "%path%\DeadByDaylight\Content\Paks\~mods" md "%path%\DeadByDaylight\Content\Paks\~mods"
-%pwsh% "& {$webRequest = Invoke-WebRequest https://raw.githubusercontent.com/ModByDaylight/PrivateServer/dev/DefaultMods.json -UseBasicParsing; $Data = ConvertFrom-Json $webRequest.Content; $Data.DefaultMods.File | ForEach-Object { 'Downloading' + ' ' + $_.Name + ' ' + '(' + $_.Version + ')' + ' ' + 'by' + ' ' + $_.Author; Invoke-WebRequest -Uri $_.Path -OutFile 'Mods.zip'; Expand-Archive -Path 'Mods.zip' -DestinationPath 'temp' -Force; Remove-Item -Path 'Mods.zip' -Force; } }"
+%pwsh% "& {$webRequest = Invoke-WebRequest https://raw.githubusercontent.com/ModByDaylight/PrivateServer/dev/DefaultMods.json -UseBasicParsing; $Data = ConvertFrom-Json $webRequest.Content; $Data.DefaultMods.File | ForEach-Object { 'Downloading' + ' ' + $_.Name + ' ' + '(' + $_.Version + ')' + ' ' + 'by' + ' ' + $_.Author; Invoke-WebRequest -Uri $_.Path -OutFile 'Mods.zip'; Expand-Archive -Path 'Mods.zip' -DestinationPath 'temp' -Force; Remove-Item -Path 'Mods.zip' -Force } }"
 %pwsh% "& {ls 'temp\*.pak' | Rename-Item -NewName {$_.name -replace 'WindowsNoEditor','%platform%'}; ls 'temp\*.sig' | Rename-Item -NewName {$_.name -replace 'WindowsNoEditor','%platform%'}; Move-Item 'temp\*' -Destination '%path%\DeadByDaylight\Content\Paks\~mods' -Force; Remove-Item -Path 'temp' -Force }"
 if exist "%path%\DeadByDaylight.exe" del "%path%\DeadByDaylight.exe"
 if exist "%path%\DeadByDaylight\Binaries\%executables%\DeadByDaylight-%executables%-Shipping.exe" del "%path%\DeadByDaylight\Binaries\%executables%\DeadByDaylight-%executables%-Shipping.exe"
