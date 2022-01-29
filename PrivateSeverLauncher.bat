@@ -61,7 +61,7 @@ echo Launching Private Server
 start %launch%
 goto :end
 :setupPrivate
-if not exist "%path%\DeadByDaylight.exe" (
+if not exist "%path%\EasyAntiCheat\EasyAntiCheat_Setup.exe" (
     echo Invalid directory, try again.
     goto :dbdlocation
 )
