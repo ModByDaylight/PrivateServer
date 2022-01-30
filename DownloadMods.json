@@ -1,0 +1,18 @@
+{
+    "DownloadMods": {
+        "File": [
+            {
+                "Name": "Freecamera",
+                "Version": "1.0.1",
+                "Author": "shmoul",
+                "Path": "https://cdn.discordapp.com/attachments/884966033595723827/936734340858126428/ShmoulFreecam.zip"
+            },
+            {
+                "Name": "Tripwire Perk",
+                "Version": "1.0.0",
+                "Author": "Archengius",
+                "Path": "https://cdn.discordapp.com/attachments/797693369307496498/932750554654978128/TripwirePerk.zip"
+            }
+        ]
+    }
+}
