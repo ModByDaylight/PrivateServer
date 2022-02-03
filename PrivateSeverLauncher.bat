@@ -61,7 +61,7 @@ if exist "%path%\DeadByDaylight\Binaries\%executables%\DeadByDaylight-%executabl
 copy PrivateExecutables\DeadByDaylight.exe "%path%" 
 copy PrivateExecutables\DeadByDaylight-%executables%-Shipping.exe "%path%\DeadByDaylight\Binaries\%executables%"
 echo Checking mod compatibility...
-%pwsh% "& {Get-ChildItem -Path 'temp\*' -Include *.pak, *.sig -Recurse | Rename-Item -NewName {$_.name -replace 'WindowsNoEditor','%platform%'} }"
+%pwsh% "& {Get-ChildItem -Path '%path%\DeadByDaylight\Content\Paks\~mods\*' -Include *.pak, *.sig -Recurse | Rename-Item -NewName {$_.name -replace 'WindowsNoEditor','%platform%'} }"
 echo Launching Private Server
 start %launch%
 goto :end
