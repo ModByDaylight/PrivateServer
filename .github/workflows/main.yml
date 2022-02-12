@@ -21,7 +21,7 @@ jobs:
       - name: ZIP File
         uses: vimtor/action-zip@v1
         with:
-          files: PrivateSeverLauncher.bat
+          files: UnrealPak/ PrivateSeverLauncher.bat
           recursive: false
           dest: PrivateServer.zip # will end up in working directory not the Publish folder
 
