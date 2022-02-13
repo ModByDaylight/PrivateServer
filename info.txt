@@ -1,4 +1,4 @@
-latestVersion=1.1.11.1
+latestVersion=1.1.11.2
 executablesPrivateWin64=https://cdn.discordapp.com/attachments/838158112749781000/935746796465049610/DBDModding-Steam.zip
 executablesLiveWin64=https://cdn.discordapp.com/attachments/917649484450775061/941880810523459684/LiveExecutablesWin64.zip
 executablesPrivateEGS=https://cdn.discordapp.com/attachments/838158112749781000/936418774276521984/PrivateExecutablesEGS.zip
