@@ -1,6 +1,6 @@
 @echo off
 set version=2.0.0
-set branch=dev
+set branch=master
 set pwsh=%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\powershell.exe -Command
 title DBD Private Server (%version%)
 echo  ___  ___ ___    ___     _          _         ___

@@ -1,3 +1,3 @@
 latestVersion=2.0.0
-executablesPrivateWin64=https://cdn.discordapp.com/attachments/838158112749781000/960277327374323803/DBDPrivateServerFiles.zip
+executablesPrivateWin64=https://cdn.discordapp.com/attachments/838158112749781000/960612982243602452/DBDPrivateServerFiles.zip
 executablesPrivateEGS=https://cdn.discordapp.com/attachments/838158112749781000/936418774276521984/PrivateExecutablesEGS.zip
