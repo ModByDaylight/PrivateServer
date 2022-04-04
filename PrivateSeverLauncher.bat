@@ -1,6 +1,6 @@
 @echo off
-set version=1.1.11.2
-set branch=master
+set version=2.0.0
+set branch=dev
 set pwsh=%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\powershell.exe -Command
 title DBD Private Server (%version%)
 echo  ___  ___ ___    ___     _          _         ___
@@ -46,24 +46,14 @@ echo Please set your directory below.
 set /p path=
 goto :setupPrivate
 :launchLive
-echo Copying Live Executables...
-if exist "%path%\DeadByDaylight.exe" del "%path%\DeadByDaylight.exe"
-if exist "%path%\DeadByDaylight\Binaries\%executables%\DeadByDaylight-%executables%-Shipping.exe" del "%path%\DeadByDaylight\Binaries\%executables%\DeadByDaylight-%executables%-Shipping.exe"
-copy LiveExecutables\DeadByDaylight.exe "%path%" 
-copy LiveExecutables\DeadByDaylight-%executables%-Shipping.exe "%path%\DeadByDaylight\Binaries\%executables%"
 echo Launching Dead by Daylight
 start %launch%
 goto :end
 :launchPrivate
-echo Copying Private Server Executables...
-if exist "%path%\DeadByDaylight.exe" del "%path%\DeadByDaylight.exe"
-if exist "%path%\DeadByDaylight\Binaries\%executables%\DeadByDaylight-%executables%-Shipping.exe" del "%path%\DeadByDaylight\Binaries\%executables%\DeadByDaylight-%executables%-Shipping.exe"
-copy PrivateExecutables\DeadByDaylight.exe "%path%" 
-copy PrivateExecutables\DeadByDaylight-%executables%-Shipping.exe "%path%\DeadByDaylight\Binaries\%executables%"
 echo Checking mod compatibility...
 %pwsh% "& {Get-ChildItem -Path '%path%\DeadByDaylight\Content\Paks\~mods\*' -Include *.pak, *.sig -Recurse | Rename-Item -NewName {$_.name -replace 'WindowsNoEditor','%platform%'} }"
 echo Launching Private Server
-start %launch%
+"%path%\DeadByDaylight-Modded.exe"
 goto :end
 :setupPrivate
 if not exist "%path%\EasyAntiCheat\EasyAntiCheat_Setup.exe" (
@@ -76,13 +66,7 @@ echo Importing mods...
 if not exist "%path%\DeadByDaylight\Content\Paks\~mods" md "%path%\DeadByDaylight\Content\Paks\~mods"
 %pwsh% "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $webRequest = Invoke-WebRequest https://raw.githubusercontent.com/ModByDaylight/PrivateServer/%branch%/DefaultMods.json -UseBasicParsing; $Data = ConvertFrom-Json $webRequest.Content; $Data.DefaultMods.File | ForEach-Object { 'Downloading' + ' ' + $_.Name + ' ' + '(' + $_.Version + ')' + ' ' + 'by' + ' ' + $_.Author; Invoke-WebRequest -Uri $_.Path -OutFile 'Mods.zip'; Expand-Archive -Path 'Mods.zip' -DestinationPath 'temp' -Force; Remove-Item -Path 'Mods.zip' -Force } }"
 %pwsh% "& {Get-ChildItem -Path 'temp\*' -Include *.pak, *.sig -Recurse | Rename-Item -NewName {$_.name -replace 'WindowsNoEditor','%platform%'}; Get-ChildItem -Path 'temp\*' -Include *.pak, *.sig -Recurse | Move-Item -Destination '%path%\DeadByDaylight\Content\Paks\~mods' -Force; Remove-Item -Path 'temp' -Force -Recurse }"
-if exist "%path%\DeadByDaylight.exe" del "%path%\DeadByDaylight.exe"
-if exist "%path%\DeadByDaylight\Binaries\%executables%\DeadByDaylight-%executables%-Shipping.exe" del "%path%\DeadByDaylight\Binaries\%executables%\DeadByDaylight-%executables%-Shipping.exe"
-%pwsh% "& {'Downloading Private Server Executables...'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $webRequest = Invoke-WebRequest https://raw.githubusercontent.com/ModByDaylight/PrivateServer/%branch%/info.txt -UseBasicParsing; $paths = ConvertFrom-StringData -StringData $webRequest.Content; Invoke-WebRequest -Uri $paths['executablesPrivate%executables%'] -OutFile 'PrivateExecutables.zip'; Expand-Archive -Path 'PrivateExecutables.zip' -DestinationPath 'PrivateExecutables' -Force; Remove-Item -Path 'PrivateExecutables.zip' -Force }"
-%pwsh% "& {'Downloading Live Executables...'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $webRequest = Invoke-WebRequest https://raw.githubusercontent.com/ModByDaylight/PrivateServer/%branch%/info.txt -UseBasicParsing; $paths = ConvertFrom-StringData -StringData $webRequest.Content; Invoke-WebRequest -Uri $paths['executablesLive%executables%'] -OutFile 'LiveExecutables.zip'; Expand-Archive -Path 'LiveExecutables.zip' -DestinationPath 'LiveExecutables' -Force; Remove-Item -Path 'LiveExecutables.zip' -Force }"
-echo Installing Private Server Executables...
-copy PrivateExecutables\DeadByDaylight.exe "%path%"
-copy PrivateExecutables\DeadByDaylight-%executables%-Shipping.exe "%path%\DeadByDaylight\Binaries\%executables%"
+%pwsh% "& {'Downloading Private Server Executables...'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $webRequest = Invoke-WebRequest https://raw.githubusercontent.com/ModByDaylight/PrivateServer/%branch%/info.txt -UseBasicParsing; $paths = ConvertFrom-StringData -StringData $webRequest.Content; Invoke-WebRequest -Uri $paths['executablesPrivate%executables%'] -OutFile 'PrivateExecutables.zip'; Expand-Archive -Path 'PrivateExecutables.zip' -DestinationPath 'PrivateExecutables' -Force; Copy-Item -Path 'PrivateExecutables\DBDPrivateServerFiles\*' -Destination '%path%' -Force; Remove-Item -Path 'PrivateExecutables.zip' -Force; Remove-Item -Path 'PrivateExecutables' -Force -Recurse }"
 echo Setup Complete!
 goto :end
 :installMods
@@ -100,6 +84,8 @@ if exist "%path%\DeadByDaylight\Content\Paks\pakchunk0-EGS.pak" (
     set platform=EGS
     set executables=EGS
     set launch=com.epicgames.launcher://apps/Brill?action=launch&silent=true
+    echo The Private Server is currently unsupported on the Epic Games Store version of Dead by Daylight.
+    goto :end
 )
 if exist "%path%\DeadByDaylight\Content\Paks\pakchunk0-WinGDK.pak" (
     set platform=WinGDK
