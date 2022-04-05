@@ -1,5 +1,5 @@
 @echo off
-set version=2.0.0
+set version=2.0.1
 set branch=master
 set pwsh=%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\powershell.exe -Command
 title DBD Private Server (%version%)
@@ -50,50 +50,44 @@ echo Launching Dead by Daylight
 start %launch%
 goto :end
 :launchPrivate
-echo Checking mod compatibility...
-%pwsh% "& {Get-ChildItem -Path '%path%\DeadByDaylight\Content\Paks\~mods\*' -Include *.pak, *.sig -Recurse | Rename-Item -NewName {$_.name -replace 'WindowsNoEditor','%platform%'} }"
 echo Launching Private Server
-"%path%\DeadByDaylight-Modded.exe"
+cd %path%
+start DeadByDaylight-Modded.exe
 goto :end
 :setupPrivate
-if not exist "%path%\EasyAntiCheat\EasyAntiCheat_Setup.exe" (
-    echo Invalid directory, try again.
-    goto :dbdlocation
-)
-echo %path%>gamepath.txt
 call :platformCheck
+echo %path%>gamepath.txt
 echo Importing mods...
 if not exist "%path%\DeadByDaylight\Content\Paks\~mods" md "%path%\DeadByDaylight\Content\Paks\~mods"
 %pwsh% "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $webRequest = Invoke-WebRequest https://raw.githubusercontent.com/ModByDaylight/PrivateServer/%branch%/DefaultMods.json -UseBasicParsing; $Data = ConvertFrom-Json $webRequest.Content; $Data.DefaultMods.File | ForEach-Object { 'Downloading' + ' ' + $_.Name + ' ' + '(' + $_.Version + ')' + ' ' + 'by' + ' ' + $_.Author; Invoke-WebRequest -Uri $_.Path -OutFile 'Mods.zip'; Expand-Archive -Path 'Mods.zip' -DestinationPath 'temp' -Force; Remove-Item -Path 'Mods.zip' -Force } }"
-%pwsh% "& {Get-ChildItem -Path 'temp\*' -Include *.pak, *.sig -Recurse | Rename-Item -NewName {$_.name -replace 'WindowsNoEditor','%platform%'}; Get-ChildItem -Path 'temp\*' -Include *.pak, *.sig -Recurse | Move-Item -Destination '%path%\DeadByDaylight\Content\Paks\~mods' -Force; Remove-Item -Path 'temp' -Force -Recurse }"
-%pwsh% "& {'Downloading Private Server Executables...'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $webRequest = Invoke-WebRequest https://raw.githubusercontent.com/ModByDaylight/PrivateServer/%branch%/info.txt -UseBasicParsing; $paths = ConvertFrom-StringData -StringData $webRequest.Content; Invoke-WebRequest -Uri $paths['executablesPrivate%executables%'] -OutFile 'PrivateExecutables.zip'; Expand-Archive -Path 'PrivateExecutables.zip' -DestinationPath 'PrivateExecutables' -Force; Copy-Item -Path 'PrivateExecutables\DBDPrivateServerFiles\DeadByDaylight-Modded.exe' -Destination '%path%' -Force; Copy-Item -Path 'PrivateExecutables\DBDPrivateServerFiles\DeadByDaylight\Binaries\%executables%\*' -Destination '%path%\DeadByDaylight\Binaries\%executables%' -Force; Remove-Item -Path 'PrivateExecutables.zip' -Force; Remove-Item -Path 'PrivateExecutables' -Force -Recurse }"
+%pwsh% "& {Get-ChildItem -Path 'temp\*' -Include *.pak, *.sig -Recurse | Move-Item -Destination '%path%\DeadByDaylight\Content\Paks\~mods' -Force; Remove-Item -Path 'temp' -Force -Recurse }"
+%pwsh% "& {'Downloading Private Server Executables...'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $webRequest = Invoke-WebRequest https://raw.githubusercontent.com/ModByDaylight/PrivateServer/%branch%/info.txt -UseBasicParsing; $paths = ConvertFrom-StringData -StringData $webRequest.Content; Invoke-WebRequest -Uri $paths['executablesPrivate%binaries%'] -OutFile 'PrivateExecutables.zip'; Expand-Archive -Path 'PrivateExecutables.zip' -DestinationPath 'PrivateExecutables' -Force; Copy-Item -Path 'PrivateExecutables\DBDPrivateServerFiles\DeadByDaylight-Modded.exe' -Destination '%path%' -Force; Copy-Item -Path 'PrivateExecutables\DBDPrivateServerFiles\DeadByDaylight\Binaries\%binaries%\*' -Destination '%path%\DeadByDaylight\Binaries\%binaries%' -Force; Remove-Item -Path 'PrivateExecutables.zip' -Force; Remove-Item -Path 'PrivateExecutables' -Force -Recurse }"
 echo Setup Complete!
 goto :end
 :installMods
 %pwsh% "& {''; 'Installed Mods:'; ''; Get-ChildItem '%path%\DeadByDaylight\Content\Paks\~mods\*.pak' -Name -Recurse }"
 %pwsh% "& {$webRequest = Invoke-WebRequest https://raw.githubusercontent.com/ModByDaylight/PrivateServer/%branch%/DownloadMods.json -UseBasicParsing; $Data = ConvertFrom-Json $webRequest.Content; $number=0; ''; 'Available Mods:'; ''; $Data.DownloadMods.File | ForEach-Object { $number=$number+1; '[' + $number + ']. ' + $_.Name + ' ' + '(' + $_.Version + ')' + ' ' + 'by' + ' ' + $_.Author }; ''; $ErrorActionPreference = 'SilentlyContinue'; $input=Read-Host 'Select an option'; $Data.DownloadMods.File[$input-1] | ForEach-Object { ''; 'Downloading' + ' ' + $_.Name + ' ' + '(' + $_.Version + ')' + ' ' + 'by' + ' ' + $_.Author; ''; Invoke-WebRequest -Uri $_.Path -OutFile 'Mods.zip'; Expand-Archive -Path 'Mods.zip' -DestinationPath 'temp' -Force; Remove-Item -Path 'Mods.zip' -Force } }"
-%pwsh% "& {Get-ChildItem -Path 'temp\*' -Include *.pak, *.sig -Recurse | Rename-Item -NewName {$_.name -replace 'WindowsNoEditor','%platform%'}; Get-ChildItem -Path 'temp\*' -Include *.pak, *.sig -Recurse | Move-Item -Destination '%path%\DeadByDaylight\Content\Paks\~mods' -Force; Remove-Item -Path 'temp' -Force -Recurse }"
+%pwsh% "& {Get-ChildItem -Path 'temp\*' -Include *.pak, *.sig -Recurse | Move-Item -Destination '%path%\DeadByDaylight\Content\Paks\~mods' -Force; Remove-Item -Path 'temp' -Force -Recurse }"
 goto :end
 :platformCheck
 if exist "%path%\DeadByDaylight\Content\Paks\pakchunk0-WindowsNoEditor.pak" (
-    set platform=WindowsNoEditor
-    set executables=Win64
+    set binaries=Win64
     set launch=steam://rungameid/381210
+    goto :eof
 )
 if exist "%path%\DeadByDaylight\Content\Paks\pakchunk0-EGS.pak" (
-    set platform=EGS
-    set executables=EGS
+    set binaries=EGS
     set launch=com.epicgames.launcher://apps/Brill?action=launch&silent=true
     echo The Private Server is currently unsupported on the Epic Games Store version of Dead by Daylight.
     goto :end
 )
 if exist "%path%\DeadByDaylight\Content\Paks\pakchunk0-WinGDK.pak" (
-    set platform=WinGDK
-    set executables=WinGDK
+    set binaries=WinGDK
     set launch=shell:appsFolder\BehaviourInteractive.DeadbyDaylightWindows_b1gz2xhdanwfm!AppDeadByDaylightShipping
     echo The Private Server is currently unsupported on the Microsoft Store version of Dead by Daylight.
     goto :end
 )
-goto :eof
+echo Invalid directory, try again.
+goto :dbdlocation
 :end
 pause
