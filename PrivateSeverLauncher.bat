@@ -87,7 +87,7 @@ echo Installation Complete!
 goto :end
 :uninstallPrivate
 echo Uninstalling Private Server...
-%pwsh% "& {$ErrorActionPreference = 'SilentlyContinue'; Remove-Item '%path%\DeadByDaylight-Modded.exe', '%path%\DeadByDaylight\Binaries\%binaries%\DBDModLoader.dll', '%path%\DeadByDaylight\Binaries\%binaries%\DBDModLoader.dll', '%path%\DeadByDaylight\Binaries\%binaries%\PolyHook_2.dll', '%path%\DeadByDaylight\Binaries\%binaries%\steam_appid.txt', '%path%\DeadByDaylight\Binaries\%binaries%\UnrealFramework.dll' }"
+%pwsh% "& {$ErrorActionPreference = 'SilentlyContinue'; Remove-Item 'gamepath.txt', '%path%\DeadByDaylight-Modded.exe', '%path%\DeadByDaylight\Binaries\%binaries%\DBDModLoader.dll', '%path%\DeadByDaylight\Binaries\%binaries%\DBDModLoader.dll', '%path%\DeadByDaylight\Binaries\%binaries%\PolyHook_2.dll', '%path%\DeadByDaylight\Binaries\%binaries%\steam_appid.txt', '%path%\DeadByDaylight\Binaries\%binaries%\UnrealFramework.dll' }"
 echo Completed.
 goto :end
 :platformCheck
