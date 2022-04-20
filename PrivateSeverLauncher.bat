@@ -1,5 +1,5 @@
 @echo off
-set version=2.1.0
+set version=2.1.1
 set branch=master
 set autoUpdateBinaries=true
 set pwsh=%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\powershell.exe -Command
@@ -11,12 +11,13 @@ echo ^|___/^|___/___/  ^|_^| ^|_^| ^|_^|\_/\__,_^|\__\___^| ^|___/\___^|_^|  \_/
 echo.
 echo DBD Private Server (%version%)
 echo.
-%pwsh% "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $webRequest = Invoke-WebRequest https://raw.githubusercontent.com/ModByDaylight/PrivateServer/%branch%/info.txt -UseBasicParsing; $paths = ConvertFrom-StringData -StringData $webRequest.Content; if ( $paths['latestVersion'] -gt '%version%' ) { 'Update available. Please download the latest version. ' + '(' + $paths['latestVersion'] + ')'; echo 'https://github.com/ModByDaylight/PrivateServer/releases/latest' } }"
+%pwsh% "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $webRequest = Invoke-WebRequest https://raw.githubusercontent.com/ModByDaylight/PrivateServer/%branch%/PrivateServer.json -UseBasicParsing; $Data = ConvertFrom-Json $webRequest.Content; if ( $Data.latestVersion -gt '%version%' ) { 'Update available. Please download the latest version. ' + '(' + $Data.latestVersion + ')'; echo 'https://github.com/ModByDaylight/PrivateServer/releases/latest' } }"
 if exist gamepath.txt (
     set /p path=<gamepath.txt
 ) else goto :paths
 call :platformCheck
-if exist "%path%/.cache/binariesVersion.txt" call :updateBinaries
+if exist "%path%/.cache/BinariesVersion.json" call :updateBinaries
+if exist "%path%/.cache/InstalledMods.json" call :updateMods
 :start
 echo [1]. Launch Live
 echo [2]. Launch Private Server
@@ -79,15 +80,14 @@ goto :managePrivate
 call :platformCheck
 echo %path%>gamepath.txt
 if not exist "%path%\DeadByDaylight\Content\Paks\~mods" md "%path%\DeadByDaylight\Content\Paks\~mods"
-%pwsh% "& {'Installing required mods...'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $webRequest = Invoke-WebRequest https://raw.githubusercontent.com/ModByDaylight/PrivateServer/%branch%/DefaultMods.json -UseBasicParsing; $Data = ConvertFrom-Json $webRequest.Content; $Data.DefaultMods.File | ForEach-Object { 'Downloading' + ' ' + $_.Name + ' ' + '(' + $_.Version + ')' + ' ' + 'by' + ' ' + $_.Author; Invoke-WebRequest -Uri $_.Path -OutFile 'Mods.zip'; Expand-Archive -Path 'Mods.zip' -DestinationPath 'temp' -Force; Remove-Item -Path 'Mods.zip' -Force } }"
-%pwsh% "& {Get-ChildItem -Path 'temp\*' -Include *.pak, *.sig -Recurse | Move-Item -Destination '%path%\DeadByDaylight\Content\Paks\~mods' -Force; Remove-Item -Path 'temp' -Force -Recurse }"
+%pwsh% "& {'Installing required mods...'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $webRequest = Invoke-WebRequest https://raw.githubusercontent.com/ModByDaylight/PrivateServer/%branch%/DefaultMods.json -UseBasicParsing; $Data = ConvertFrom-Json $webRequest.Content; $Data.DefaultMods | ForEach-Object { 'Downloading' + ' ' + $_.Name + ' ' + '(' + $_.Version + ')' + ' ' + 'by' + ' ' + $_.Author; Invoke-WebRequest -Uri $_.DownloadLink -OutFile 'Mods.zip'; Expand-Archive -Path 'Mods.zip' -DestinationPath 'temp' -Force; Remove-Item -Path 'Mods.zip' -Force }; $hash = @{}; foreach ($i in $Data.DefaultMods) { $hash.add($i.UUID,$i.Version) }; $hash | ConvertTo-Json -Depth 10 | Out-File '%path%\.cache\InstalledMods.json'; if (Test-Path 'temp') { Get-ChildItem -Path 'temp\*' -Include *.pak, *.sig -Recurse | Move-Item -Destination '%path%\DeadByDaylight\Content\Paks\~mods' -Force; Remove-Item -Path 'temp' -Force -Recurse }"
 if not exist "%path%\.cache" md "%path%\.cache"
-%pwsh% "& {'Downloading Private Server Binaries...'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $webRequest = Invoke-WebRequest https://raw.githubusercontent.com/ModByDaylight/PrivateServer/%branch%/info.txt -UseBasicParsing; $paths = ConvertFrom-StringData -StringData $webRequest.Content; Invoke-WebRequest -Uri $paths['executablesPrivate%binaries%'] -OutFile 'PrivateExecutables.zip'; Expand-Archive -Path 'PrivateExecutables.zip' -DestinationPath 'PrivateExecutables' -Force; Copy-Item -Path 'PrivateExecutables\DBDPrivateServerFiles\DeadByDaylight-Modded.exe' -Destination '%path%' -Force; Copy-Item -Path 'PrivateExecutables\DBDPrivateServerFiles\DeadByDaylight\Binaries\%binaries%\*' -Destination '%path%\DeadByDaylight\Binaries\%binaries%' -Force; Remove-Item -Path 'PrivateExecutables.zip' -Force; Remove-Item -Path 'PrivateExecutables' -Force -Recurse; $paths['latestBinaries'] | Out-File -Encoding ASCII -FilePath '%path%\.cache\binariesVersion.txt' }"
+%pwsh% "& {'Downloading Private Server Binaries...'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $webRequest = Invoke-WebRequest https://raw.githubusercontent.com/ModByDaylight/PrivateServer/%branch%/PrivateServer.json -UseBasicParsing; $Data = ConvertFrom-Json $webRequest.Content; Invoke-WebRequest -Uri $Data.executablesPrivate%binaries% -OutFile 'PrivateExecutables.zip'; Expand-Archive -Path 'PrivateExecutables.zip' -DestinationPath 'PrivateExecutables' -Force; Copy-Item -Path 'PrivateExecutables\DBDPrivateServerFiles\DeadByDaylight-Modded.exe' -Destination '%path%' -Force; Copy-Item -Path 'PrivateExecutables\DBDPrivateServerFiles\DeadByDaylight\Binaries\%binaries%\*' -Destination '%path%\DeadByDaylight\Binaries\%binaries%' -Force; Remove-Item -Path 'PrivateExecutables.zip' -Force; Remove-Item -Path 'PrivateExecutables' -Force -Recurse; @{binariesVersion=$Data.latestBinaries} | ConvertTo-Json | Out-File '%path%\.cache\BinariesVersion.json' }"
 echo Installation Complete!
 goto :end
 :uninstallPrivate
 echo Uninstalling Private Server...
-%pwsh% "& {$ErrorActionPreference = 'SilentlyContinue'; Remove-Item 'gamepath.txt', '%path%\DeadByDaylight-Modded.exe', '%path%\DeadByDaylight\Binaries\%binaries%\DBDModLoader.dll', '%path%\DeadByDaylight\Binaries\%binaries%\DBDModLoader.dll', '%path%\DeadByDaylight\Binaries\%binaries%\PolyHook_2.dll', '%path%\DeadByDaylight\Binaries\%binaries%\steam_appid.txt', '%path%\DeadByDaylight\Binaries\%binaries%\UnrealFramework.dll' }"
+%pwsh% "& {$ErrorActionPreference = 'SilentlyContinue'; Remove-Item '%path%\DeadByDaylight-Modded.exe', '%path%\DeadByDaylight\Binaries\%binaries%\DBDModLoader.dll', '%path%\DeadByDaylight\Binaries\%binaries%\DBDModLoader.dll', '%path%\DeadByDaylight\Binaries\%binaries%\PolyHook_2.dll', '%path%\DeadByDaylight\Binaries\%binaries%\steam_appid.txt', '%path%\DeadByDaylight\Binaries\%binaries%\UnrealFramework.dll' }"
 echo Completed.
 goto :end
 :platformCheck
@@ -111,8 +111,10 @@ if exist "%path%\DeadByDaylight\Content\Paks\pakchunk0-WinGDK.pak" (
 echo Invalid directory, try again.
 goto :dbdlocation
 :updateBinaries
-set /p binariesVersion=<"%path%/.cache/binariesVersion.txt"
-if '%autoUpdateBinaries%'=='true' %pwsh% "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $webRequest = Invoke-WebRequest https://raw.githubusercontent.com/ModByDaylight/PrivateServer/%branch%/info.txt -UseBasicParsing; $paths = ConvertFrom-StringData -StringData $webRequest.Content; if ( $paths['latestBinaries'] -gt '%binariesVersion%' ) { 'Updating Private Server Binaries...'; Invoke-WebRequest -Uri $paths['executablesPrivate%binaries%'] -OutFile 'PrivateExecutables.zip'; Expand-Archive -Path 'PrivateExecutables.zip' -DestinationPath 'PrivateExecutables' -Force; Copy-Item -Path 'PrivateExecutables\DBDPrivateServerFiles\DeadByDaylight-Modded.exe' -Destination '%path%' -Force; Copy-Item -Path 'PrivateExecutables\DBDPrivateServerFiles\DeadByDaylight\Binaries\%binaries%\*' -Destination '%path%\DeadByDaylight\Binaries\%binaries%' -Force; Remove-Item -Path 'PrivateExecutables.zip' -Force; Remove-Item -Path 'PrivateExecutables' -Force -Recurse; $paths['latestBinaries'] | Out-File -Encoding ASCII -FilePath '%path%\.cache\binariesVersion.txt'; '' } }"
+if '%autoUpdateBinaries%'=='true' %pwsh% "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $webRequest = Invoke-WebRequest https://raw.githubusercontent.com/ModByDaylight/PrivateServer/%branch%/PrivateServer.json -UseBasicParsing; $Data = ConvertFrom-Json $webRequest.Content; $json = Get-Content '%path%\.cache\BinariesVersion.json' | Out-String | ConvertFrom-Json; if ( $Data.latestBinaries -gt $json.binariesVersion ) { 'Updating Private Server Binaries...'; Invoke-WebRequest -Uri $Data.executablesPrivate%binaries% -OutFile 'PrivateExecutables.zip'; Expand-Archive -Path 'PrivateExecutables.zip' -DestinationPath 'PrivateExecutables' -Force; Copy-Item -Path 'PrivateExecutables\DBDPrivateServerFiles\DeadByDaylight-Modded.exe' -Destination '%path%' -Force; Copy-Item -Path 'PrivateExecutables\DBDPrivateServerFiles\DeadByDaylight\Binaries\%binaries%\*' -Destination '%path%\DeadByDaylight\Binaries\%binaries%' -Force; Remove-Item -Path 'PrivateExecutables.zip' -Force; Remove-Item -Path 'PrivateExecutables' -Force -Recurse; @{binariesVersion=$Data.latestBinaries} | ConvertTo-Json | Out-File '%path%\.cache\BinariesVersion.json'; '' } }"
+goto :eof
+:updateMods
+if '%autoUpdateBinaries%'=='true' %pwsh% "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $webRequest = Invoke-WebRequest https://raw.githubusercontent.com/ModByDaylight/PrivateServer/%branch%/DefaultMods.json -UseBasicParsing; $Data = ConvertFrom-Json $webRequest.Content; $json = Get-Content '%path%\.cache\InstalledMods.json' | Out-String | ConvertFrom-Json; foreach ($i in $Data.DefaultMods.UUID) { $DefaultMods = $Data.DefaultMods | Where-Object { $_.UUID -eq $i }; if ( $DefaultMods.Version -gt $json.$i ) { 'Updating' + ' ' + $DefaultMods.Name + ' ' + '(' + $DefaultMods.Version + ')' + ' ' + 'by' + ' ' + $DefaultMods.Author; Invoke-WebRequest -Uri $DefaultMods.DownloadLink -OutFile 'Mods.zip'; Expand-Archive -Path 'Mods.zip' -DestinationPath 'temp' -Force; Remove-Item -Path 'Mods.zip' -Force; } $hash = @{}; foreach ($i in $Data.DefaultMods) { $hash.add($i.UUID,$i.Version) }; $hash | ConvertTo-Json -Depth 10 | Out-File '%path%\.cache\InstalledMods.json'}; if (Test-Path 'temp') { Get-ChildItem -Path 'temp\*' -Include *.pak, *.sig -Recurse | Move-Item -Destination '%path%\DeadByDaylight\Content\Paks\~mods' -Force; Remove-Item -Path 'temp' -Force -Recurse } }"
 goto :eof
 :end
 pause
