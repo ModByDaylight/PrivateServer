@@ -3,30 +3,30 @@
         {
             "Name": "Private Server Configs",
             "UUID": "706600bf-f343-4c97-9117-82d5ca685bea",
-            "Version": "1.0.0",
+            "Version": "1.0.1",
             "Author": "Mod By Daylight",
-            "DownloadLink": "https://cdn.discordapp.com/attachments/917649484450775061/933865749250969640/PrivateServerConfigs.zip"
+            "DownloadLink": "https://cdn.discordapp.com/attachments/917649484450775061/970153901712097300/PrivateServerConfigs.zip"
         },
         {
             "Name": "Lobby Controls",
             "UUID": "2cfffbd4-dd5f-4be6-b8a8-47c1ea76b341",
-            "Version": "1.1.0",
+            "Version": "1.2.0",
             "Author": "Mod By Daylight",
-            "DownloadLink": "https://cdn.discordapp.com/attachments/917649484450775061/968349481563201576/LobbyControls.zip"
+            "DownloadLink": "https://cdn.discordapp.com/attachments/917649484450775061/970153901552730202/LobbyControls.zip"
         },
         {
             "Name": "Cosmetics Fix",
             "UUID": "daace3a2-8780-4f54-bc8e-a0d490990993",
-            "Version": "1.0.0",
+            "Version": "1.0.1",
             "Author": "BrandonItaly",
-            "DownloadLink": "https://cdn.discordapp.com/attachments/917649484450775061/933842566514872400/AllCosmeticsFix.zip"
+            "DownloadLink": "https://cdn.discordapp.com/attachments/917649484450775061/970153901393338438/CosmeticsFix.zip"
         },
         {
             "Name": "Tutorial Characters",
             "UUID": "b05b3faa-1180-4005-9a68-f1d4369e3c7b",
-            "Version": "1.0.1",
+            "Version": "1.0.2",
             "Author": "BrandonItaly",
-            "DownloadLink": "https://cdn.discordapp.com/attachments/917649484450775061/966115826879049778/UnlockTutorialCharacters.zip"
+            "DownloadLink": "https://cdn.discordapp.com/attachments/917649484450775061/970153902001500210/TutorialCharacters.zip"
         }
     ]
 }
