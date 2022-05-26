@@ -1,0 +1,29 @@
+{
+  "FileVersion" : 3,
+	
+	"FriendlyName" : "Oodle Data",
+	"Version" : 1,
+	"VersionName" : "1.0",
+	"CreatedBy": "Epic Games, Inc.",
+	"CreatedByURL": "http://epicgames.com",
+	"Description" : "Oodle Data plugin for pak and iostore compression.",
+    "Category": "Compression",
+	"EnabledByDefault" : true,
+	"CanContainContent" : false,
+	"IsBetaVersion" : false,
+	"Installed" : false,
+	"SupportedPrograms" : [	"UnrealPak" ],
+
+  "Modules": [
+    {
+      "Name": "OodleDataCompressionFormat",
+      "Type": "RuntimeAndProgram",
+      "LoadingPhase": "EarliestPossible",
+      "WhitelistPrograms": [ "UnrealPak" ],
+	  "BlacklistPlatforms": [ 
+		"HoloLens", 
+		"Lumin" 
+      ]
+    }
+  ]
+}
