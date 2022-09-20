@@ -15,6 +15,13 @@
             "DownloadLink": "https://cdn.discordapp.com/attachments/917649484450775061/979523936897364028/LobbyControls.zip"
         },
         {
+            "Name": "Unreal Engine Console",
+            "UUID": "16bdc19f-2b88-4d95-a111-fb304f4e549b",
+            "Version": "1.0.0",
+            "Author": "Cranch & shmoul",
+            "DownloadLink": "https://cdn.discordapp.com/attachments/917649484450775061/1021584306189119548/UnrealConsole.zip"
+        },
+        {
             "Name": "Unlinked Sets",
             "UUID": "daace3a2-8780-4f54-bc8e-a0d490990993",
             "Version": "1.1.0",
